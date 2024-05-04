@@ -1,11 +1,11 @@
 #include "robot.h"
 
-Robot::Robot(double x, double y, QWidget *parent) :
+Robot::Robot(double radius, double x, double y, QWidget *parent) :
     QWidget(parent),
     position(x, y)
 {
-    // Set default size for the widget
-    setFixedSize(20, 20);
+    setFixedSize(radius * 2, radius * 2);
+    setPosition(position);
 }
 
 QPointF Robot::getPosition() const
@@ -13,11 +13,9 @@ QPointF Robot::getPosition() const
     return position;
 }
 
-void Robot::setPosition(double x, double y)
+void Robot::setPosition(QPointF point)
 {
-    position.setX(x);
-    position.setY(y);
-    update(); // Trigger repaint
+    move(point.toPoint());
 }
 
 void Robot::paintEvent(QPaintEvent *event)

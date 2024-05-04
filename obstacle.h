@@ -1,11 +1,11 @@
-#ifndef ROBOT_H
-#define ROBOT_H
+#ifndef OBSTACLE_H
+#define OBSTACLE_H
 
 #include <QWidget>
 #include <QPointF>
 #include <QPainter>
 
-class Robot : public QWidget
+class Obstacle : public QWidget
 {
     Q_OBJECT
 
@@ -13,7 +13,7 @@ private:
     QPointF position;
 
 public:
-    explicit Robot(double size, double x = 0, double y = 0, QWidget *parent = nullptr);
+    explicit Obstacle(double size, double x = 0, double y = 0, QWidget *parent = nullptr);
     QPointF getPosition() const;
     void setPosition(QPointF);
 
@@ -21,4 +21,4 @@ protected:
     void paintEvent(QPaintEvent *event) override;
 };
 
-#endif // ROBOT_H
+#endif // OBSTACLE_H
