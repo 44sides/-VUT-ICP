@@ -1,18 +1,20 @@
-#include "simulation.h"
 #include <QPushButton>
+#include "simulation.h"
+#include "interface.h"
+
+#include <QDebug>
 
 Simulation::Simulation(QWidget *parent)
     : QGraphicsView(parent), scene(new QGraphicsScene(this))
 {
-    loadFromJson("/Users/josefsusik/Desktop/testingICP/icp.json");
+    QString projectDir = QCoreApplication::applicationDirPath();
+    QString jsonFilePath = projectDir + "/../../icp.json";
+    loadFromJson(jsonFilePath);
 
     QTimer *timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &Simulation::advanceScene);
 
-
-    // Create pause/play button
-    QPushButton *pausePlayButton = new QPushButton("Pause", this);
-    connect(pausePlayButton, &QPushButton::clicked, this, &Simulation::togglePause);
+    Interface(this);
 
     timer->start(1000 / 60);
 }
