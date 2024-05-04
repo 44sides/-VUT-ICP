@@ -12,12 +12,16 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     obstacle.cpp \
-    robot.cpp
+    robot.cpp \
+    simulation.cpp \
+    userRobot.cpp
 
 HEADERS += \
     mainwindow.h \
     obstacle.h \
-    robot.h
+    robot.h \
+    simulation.h \
+    userRobot.h
 
 FORMS += \
     mainwindow.ui

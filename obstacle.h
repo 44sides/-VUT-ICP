@@ -1,24 +1,18 @@
 #ifndef OBSTACLE_H
 #define OBSTACLE_H
 
-#include <QWidget>
-#include <QPointF>
-#include <QPainter>
+#include <QGraphicsItem>
 
-class Obstacle : public QWidget
+class Obstacle : public QGraphicsItem
 {
-    Q_OBJECT
-
-private:
-    QPointF position;
-
 public:
-    explicit Obstacle(double size, double x = 0, double y = 0, QWidget *parent = nullptr);
-    QPointF getPosition() const;
-    void setPosition(QPointF);
+    enum { Type = UserType + 1 };
 
-protected:
-    void paintEvent(QPaintEvent *event) override;
+    Obstacle();
+
+    int type() const override { return Type; }
+    QRectF boundingRect() const override;
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 };
 
 #endif // OBSTACLE_H

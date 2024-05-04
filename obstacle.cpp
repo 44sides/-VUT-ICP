@@ -1,28 +1,13 @@
 #include "obstacle.h"
+#include <QPainter>
 
-Obstacle::Obstacle(double size, double x, double y, QWidget *parent) :
-    QWidget(parent),
-    position(x, y)
-{
-    setFixedSize(size, size);
-    setPosition(position);
+Obstacle::Obstacle() {}
+
+QRectF Obstacle::boundingRect() const {
+    return QRectF(-20, -20, 40, 40);
 }
 
-QPointF Obstacle::getPosition() const
-{
-    return position;
-}
-
-void Obstacle::setPosition(QPointF point)
-{
-    move(point.toPoint());
-}
-
-void Obstacle::paintEvent(QPaintEvent *event)
-{
-    Q_UNUSED(event);
-    QPainter painter(this);
-    painter.setRenderHint(QPainter::Antialiasing);
-    painter.setBrush(Qt::red);
-    painter.drawRect(rect());
+void Obstacle::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *) {
+    painter->setBrush(Qt::red);
+    painter->drawRect(-20, -20, 40, 40);
 }
