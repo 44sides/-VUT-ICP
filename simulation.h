@@ -19,7 +19,6 @@ class Simulation : public QGraphicsView
 public:
     Simulation(QWidget *parent = nullptr);
     void loadFromJson(const QString& filename);
-    bool isPaused = false;
     void togglePause();
 
 private slots:
@@ -27,6 +26,7 @@ private slots:
 
 private:
     QGraphicsScene *scene;
+    bool isPaused = false;
 
 };
 
