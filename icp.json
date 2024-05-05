@@ -31,6 +31,11 @@
       "type": "obstacle",
       "x": 400,
       "y": 250
+    },
+    {
+      "type": "obstacle",
+      "x": 800,
+      "y": 450
     }
   ]
 }

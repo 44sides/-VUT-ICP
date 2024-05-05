@@ -7,6 +7,6 @@ int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
     Simulation sim;
-    sim.show();
+    sim.showFullScreen();
     return app.exec();
 }

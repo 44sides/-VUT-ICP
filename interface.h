@@ -4,6 +4,7 @@
 
 #include <QObject>
 #include <QPushButton>
+#include <QFileDialog>
 #include "simulation.h"
 
 class Interface : public QObject
@@ -12,16 +13,29 @@ class Interface : public QObject
 public:
     explicit Interface(QWidget *parent = nullptr);
 
-    void setupButton(QPushButton *pauseButton);
     void setSimulation(Simulation *simulation);
+
+    void addPauseButton();
+    void addJsonFileButton();
+    void addExitButton();
 
 signals:
 
-public slots:
+private slots:
+    void openJsonFile();
+    void exitSimulation();
 
 private:
-    QPushButton *m_pauseButton;
     Simulation *m_simulation;
+
+    QMenu *menu = nullptr;
+
+    // QPoint m_pauseButtonPosition;
+    // QPoint m_jsonFileButtonPosition;
+    // QPoint m_exitButtonPosition;
+    // QPushButton *pauseButton = nullptr;
+    // QPushButton *jsonFileButton = nullptr;
+    // QPushButton *exitButton = nullptr;
 };
 
 #endif // INTERFACE_H

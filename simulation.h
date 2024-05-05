@@ -20,13 +20,15 @@ public:
     Simulation(QWidget *parent = nullptr);
     void loadFromJson(const QString& filename);
     void togglePause();
+    void clearUserRobots();
+    void clearSceneBorders();
 
 private slots:
     void advanceScene();
 
 private:
     QGraphicsScene *scene;
-    bool isPaused = false;
+    bool isPaused = true;
 
 };
 

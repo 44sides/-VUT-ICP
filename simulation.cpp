@@ -7,14 +7,12 @@
 Simulation::Simulation(QWidget *parent)
     : QGraphicsView(parent), scene(new QGraphicsScene(this))
 {
-    QString projectDir = QCoreApplication::applicationDirPath();
-    QString jsonFilePath = projectDir + "/../../icp.json";
-    loadFromJson(jsonFilePath);
+    Interface *interface = new Interface(this);
+
+    interface->setSimulation(this);
 
     QTimer *timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &Simulation::advanceScene);
-
-    Interface(this);
 
     timer->start(1000 / 60);
 }
@@ -92,10 +90,38 @@ void Simulation::loadFromJson(const QString& filename) {
         QJsonObject sceneObj = root["scene"].toObject();
         int width = sceneObj["width"].toInt();
         int height = sceneObj["height"].toInt();
+
+        // Scene borders painting
+        QGraphicsRectItem *sceneBoundary = new QGraphicsRectItem(0, 0, width, height);
+        QPen boundaryPen(Qt::darkGray);
+        sceneBoundary->setPen(boundaryPen);
+        scene->addItem(sceneBoundary);
+
         scene->setSceneRect(0, 0, width, height);
         setScene(scene);
     }
 
+}
+
+void Simulation::clearUserRobots()
+{
+    QList<QGraphicsItem*> items = scene->items();
+    for (QGraphicsItem* item : items) {
+        if (dynamic_cast<UserRobot*>(item)) {
+            scene->removeItem(item);
+            delete item;
+        }
+    }
+}
+
+void Simulation::clearSceneBorders() {
+    QList<QGraphicsItem*> items = scene->items();
+    for (QGraphicsItem* item : items) {
+        if (dynamic_cast<QGraphicsRectItem*>(item)) {
+            scene->removeItem(item);
+            delete item;
+        }
+    }
 }
 
 // Slot to handle advancing the scene
@@ -108,12 +134,4 @@ void Simulation::advanceScene() {
 // Slot to toggle pause/play
 void Simulation::togglePause() {
     isPaused = !isPaused;
-    QPushButton *button = qobject_cast<QPushButton*>(sender());
-    if (button) {
-        if (isPaused) {
-            button->setText("Play");
-        } else {
-            button->setText("Pause");
-        }
-    }
 }
