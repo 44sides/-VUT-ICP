@@ -17,15 +17,15 @@ public:
     void keyReleaseEvent(QKeyEvent *event) override;
     void advance(int step) override;
 
-private:
-    void updateMovement();
-
     qreal size;
     qreal speed;
     qreal turnAngle;
     bool moving;
     RotationDirection rotating;
     qreal angle;
+private:
+    void updateMovement();
+
 };
 
 #endif // USERROBOT_H

@@ -1,18 +1,13 @@
 #include "simulation.h"
 #include <QPushButton>
+#include <QGraphicsRectItem>
 
-Simulation::Simulation(QWidget *parent)
-    : QGraphicsView(parent), scene(new QGraphicsScene(this))
+Simulation::Simulation(QObject *parent, QString path) : QGraphicsScene(parent)
 {
-    loadFromJson("/Users/josefsusik/Desktop/testingICP/icp.json");
+    loadFromJson(path);
 
     QTimer *timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &Simulation::advanceScene);
-
-
-    // Create pause/play button
-    QPushButton *pausePlayButton = new QPushButton("Pause", this);
-    connect(pausePlayButton, &QPushButton::clicked, this, &Simulation::togglePause);
 
     timer->start(1000 / 60);
 }
@@ -52,7 +47,7 @@ void Simulation::loadFromJson(const QString& filename) {
                                      rotationDirection == "Left" ? Robot::Left : Robot::Right,
                                      color, detectionDistance);
             robot->setPos(x, y);
-            scene->addItem(robot);
+            this->addItem(robot);
         }
     }
 
@@ -62,13 +57,12 @@ void Simulation::loadFromJson(const QString& filename) {
             QJsonObject robotObj = robotValue.toObject();
             qreal x = robotObj["x"].toDouble();
             qreal y = robotObj["y"].toDouble();
-            //qreal angle = robotObj["angle"].toDouble();
             qreal speed = robotObj["speed"].toDouble();
             qreal size = robotObj["size"].toDouble();
             qreal turnAngle = robotObj["turnAngle"].toDouble();
             UserRobot *uRobot = new UserRobot(size, speed, turnAngle);
             uRobot->setPos(x, y);
-            scene->addItem(uRobot);
+            this->addItem(uRobot);
             uRobot->setFocus();
         }
     }
@@ -79,10 +73,12 @@ void Simulation::loadFromJson(const QString& filename) {
             QJsonObject obstacleObj = obstacleValue.toObject();
             qreal x = obstacleObj["x"].toDouble();
             qreal y = obstacleObj["y"].toDouble();
+            qreal rotation = obstacleObj["rotation"].toDouble();
+            qreal size = obstacleObj["size"].toDouble();
 
-            Obstacle *obstacle = new Obstacle;
+            Obstacle *obstacle = new Obstacle(size, rotation);
             obstacle->setPos(x, y);
-            scene->addItem(obstacle);
+            this->addItem(obstacle);
         }
     }
 
@@ -90,28 +86,110 @@ void Simulation::loadFromJson(const QString& filename) {
         QJsonObject sceneObj = root["scene"].toObject();
         int width = sceneObj["width"].toInt();
         int height = sceneObj["height"].toInt();
-        scene->setSceneRect(0, 0, width, height);
-        setScene(scene);
+        this->setSceneRect(0, 0, width, height);
+        //setScene(this);
+        QGraphicsRectItem *border = new QGraphicsRectItem(0, 0, width, height);
+        border->setPen(QPen(Qt::blue, 2));
+        border->setBrush(Qt::NoBrush);
+        this->addItem(border);
     }
 
 }
 
-// Slot to handle advancing the scene
 void Simulation::advanceScene() {
     if (!isPaused) {
-        scene->advance();
+        this->advance();
     }
 }
 
-// Slot to toggle pause/play
 void Simulation::togglePause() {
     isPaused = !isPaused;
-    QPushButton *button = qobject_cast<QPushButton*>(sender());
-    if (button) {
-        if (isPaused) {
-            button->setText("Play");
-        } else {
-            button->setText("Pause");
+}
+
+void Simulation::addRobot(qreal x, qreal y, qreal angle, qreal speed, qreal turnAngle, const QString& rotationDirection, const QColor& color, qreal detectionDistance) {
+    Robot *robot = new Robot(angle, speed, turnAngle,
+                             rotationDirection == "Left" ? Robot::Left : Robot::Right,
+                             color, detectionDistance);
+    robot->setPos(x, y);
+    this->addItem(robot);
+}
+
+void Simulation::addObstacle(qreal x, qreal y, qreal size, qreal rotation) {
+    Obstacle *obstacle = new Obstacle(size, rotation);
+    obstacle->setPos(x, y);
+    this->addItem(obstacle);
+}
+
+
+void Simulation::saveToJson(const QString& filename) {
+    QJsonObject root;
+
+    // Add scene dimensions
+    QJsonObject sceneObj;
+    sceneObj["width"] = static_cast<int>(this->width());
+    sceneObj["height"] = static_cast<int>(this->height());
+    root["scene"] = sceneObj;
+
+    // Add userRobot objects
+    QJsonArray userRobotArray;
+    QList<QGraphicsItem *> userRobots = this->items();
+    for (QGraphicsItem *item : userRobots) {
+        if (UserRobot *uRobot = dynamic_cast<UserRobot *>(item)) {
+            QJsonObject userRobotObj;
+            userRobotObj["x"] = static_cast<int>(uRobot->x());
+            userRobotObj["y"] = static_cast<int>(uRobot->y());
+            userRobotObj["size"] = static_cast<int>(uRobot->size);
+            userRobotObj["angle"] = static_cast<int>(uRobot->angle);
+            userRobotObj["speed"] = static_cast<double>(uRobot->speed);
+            userRobotObj["turnAngle"] = static_cast<int>(uRobot->turnAngle);
+            userRobotArray.append(userRobotObj);
         }
     }
+    root["userRobot"] = userRobotArray;
+
+    // Add robot objects
+    QJsonArray robotsArray;
+    QList<QGraphicsItem *> robots = this->items();
+    for (QGraphicsItem *item : robots) {
+        if (Robot *robot = dynamic_cast<Robot *>(item)) {
+            QJsonObject robotObj;
+            robotObj["x"] = static_cast<int>(robot->x());
+            robotObj["y"] = static_cast<int>(robot->y());
+            robotObj["angle"] = static_cast<int>(robot->angle);
+            robotObj["speed"] = robot->speed;
+            robotObj["turnAngle"] = robot->turnAngle;
+            robotObj["rotationDirection"] = robot->rotationDirection == Robot::Left ? "Left" : "Right";
+            robotObj["color"] = robot->color.name(QColor::HexRgb);
+            robotObj["detectionDistance"] = robot->detectionDistance;
+            robotsArray.append(robotObj);
+        }
+    }
+    root["robots"] = robotsArray;
+
+    // Add obstacle objects
+    QJsonArray obstaclesArray;
+    QList<QGraphicsItem *> obstacles = this->items();
+    for (QGraphicsItem *item : obstacles) {
+        if (Obstacle *obstacle = dynamic_cast<Obstacle *>(item)) {
+            QJsonObject obstacleObj;
+            obstacleObj["x"] = static_cast<int>(obstacle->x());
+            obstacleObj["y"] = static_cast<int>(obstacle->y());
+            obstacleObj["size"] = static_cast<int>(obstacle->m_size);
+            obstacleObj["rotation"] = static_cast<int>(obstacle->m_rotationAngle);
+
+            obstaclesArray.append(obstacleObj);
+        }
+    }
+    root["obstacles"] = obstaclesArray;
+
+    // Write JSON to file
+    QFile file(filename);
+    if (!file.open(QIODevice::WriteOnly)) {
+        qWarning("Couldn't open JSON file for writing.");
+        return;
+    }
+    QJsonDocument doc(root);
+    file.write(doc.toJson());
+    file.close();
 }
+

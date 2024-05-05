@@ -1,7 +1,7 @@
 {
   "scene": {
-    "width": 800,
-    "height": 800
+    "width": 600,
+    "height": 600
   },
   "userRobot": [
     {
@@ -23,14 +23,16 @@
       "turnAngle": 100,
       "rotationDirection": "Right",
       "color": "green",
-      "detectionDistance": 40
+      "detectionDistance": 20
     }
   ],
   "obstacles": [
     {
       "type": "obstacle",
       "x": 400,
-      "y": 250
+      "y": 250,
+      "size": 60,
+      "rotation": 45
     }
   ]
 }

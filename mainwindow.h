@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "simulation.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -17,7 +18,14 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+public slots:
+    void pauseSim();
+    void addRobot();
+    void addObstacle();
+    void Save();
+
 private:
     Ui::MainWindow *ui;
+    Simulation * simulation;
 };
 #endif // MAINWINDOW_H

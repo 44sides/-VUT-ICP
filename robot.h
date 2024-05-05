@@ -16,7 +16,6 @@ public:
     void advance(int step) override;
     void rotate(qreal amount);
 
-private:
     qreal angle;
     qreal speed;
     qreal turnAngle;
