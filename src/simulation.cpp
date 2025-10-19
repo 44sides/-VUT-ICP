@@ -1,7 +1,19 @@
+/*!
+ * @file simulation.cpp
+ * @author Josef Susík (xsusik00)
+ * @author Vladyslav Tverdokhlib (xtverd01)
+ * @brief Simulation
+ */
+
 #include "simulation.h"
 #include <QPushButton>
 #include <QGraphicsRectItem>
 
+/**
+ * @brief Constructs a Simulation object.
+ * @param parent The parent QObject.
+ * @param path The path to the JSON file.
+ */
 Simulation::Simulation(QObject *parent, QString path) : QGraphicsScene(parent)
 {
     loadFromJson(path);
@@ -12,6 +24,10 @@ Simulation::Simulation(QObject *parent, QString path) : QGraphicsScene(parent)
     timer->start(1000 / 60);
 }
 
+/**
+ * @brief Loads simulation data from a JSON file.
+ * @param filename The name of the JSON file.
+ */
 void Simulation::loadFromJson(const QString& filename) {
     QFile file(filename);
     if (!file.open(QIODevice::ReadOnly)) {
@@ -96,16 +112,34 @@ void Simulation::loadFromJson(const QString& filename) {
 
 }
 
+/**
+ * @brief Advances the scene.
+ */
 void Simulation::advanceScene() {
     if (!isPaused) {
         this->advance();
     }
 }
 
+/**
+ * @brief Toggles the simulation pause state.
+ */
+
 void Simulation::togglePause() {
     isPaused = !isPaused;
 }
 
+/**
+ * @brief Adds a robot to the simulation.
+ * @param x The x-coordinate of the robot's position.
+ * @param y The y-coordinate of the robot's position.
+ * @param angle The angle of the robot.
+ * @param speed The speed of the robot.
+ * @param turnAngle The turning angle of the robot.
+ * @param rotationDirection The rotation direction of the robot.
+ * @param color The color of the robot.
+ * @param detectionDistance The detection distance of the robot.
+ */
 void Simulation::addRobot(qreal x, qreal y, qreal angle, qreal speed, qreal turnAngle, const QString& rotationDirection, const QColor& color, qreal detectionDistance) {
     Robot *robot = new Robot(angle, speed, turnAngle,
                              rotationDirection == "Left" ? Robot::Left : Robot::Right,
@@ -114,13 +148,23 @@ void Simulation::addRobot(qreal x, qreal y, qreal angle, qreal speed, qreal turn
     this->addItem(robot);
 }
 
+/**
+ * @brief Adds an obstacle to the simulation.
+ * @param x The x-coordinate of the obstacle's position.
+ * @param y The y-coordinate of the obstacle's position.
+ * @param size The size of the obstacle.
+ * @param rotation The rotation of the obstacle.
+ */
 void Simulation::addObstacle(qreal x, qreal y, qreal size, qreal rotation) {
     Obstacle *obstacle = new Obstacle(size, rotation);
     obstacle->setPos(x, y);
     this->addItem(obstacle);
 }
 
-
+/**
+ * @brief Saves simulation data to a JSON file.
+ * @param filename The name of the JSON file.
+ */
 void Simulation::saveToJson(const QString& filename) {
     QJsonObject root;
 

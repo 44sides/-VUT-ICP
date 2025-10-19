@@ -1,3 +1,12 @@
+/*!
+ * @file mainwindow.h
+ * @author Josef Susík (xsusik00)
+ * @author Vladyslav Tverdokhlib (xtverd01)
+ * @brief Main window header
+ */
+
+
+
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
