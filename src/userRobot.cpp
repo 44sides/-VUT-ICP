@@ -1,18 +1,39 @@
+/*!
+ * @file userRobot.cpp
+ * @author Josef Susík (xsusik00)
+ * @author Vladyslav Tverdokhlib (xtverd01)
+ * @brief User robot implementation
+ */
+
 #include "userRobot.h"
 #include "obstacle.h"
 #include <QPainter>
 #include <cmath>
 #include <QGraphicsScene>
 
+/**
+ * @brief Constructs a UserRobot object.
+ * @param size The size of the robot.
+ * @param speed The speed of the robot.
+ * @param turnAngle The angle by which the robot can turn.
+ */
 UserRobot::UserRobot(qreal size, qreal speed, qreal turnAngle)
     : size(size), speed(speed), turnAngle(turnAngle), moving(false), rotating(None), angle(0) {
     setFlags(ItemIsFocusable);
 }
 
+/**
+ * @brief Returns the bounding rectangle of the robot.
+ * @return The bounding rectangle of the robot.
+ */
 QRectF UserRobot::boundingRect() const {
     return QRectF(-size / 2, -size / 2, size, size);
 }
 
+/**
+ * @brief Paints the robot on the scene.
+ * @param painter The painter object used for painting.
+ */
 void UserRobot::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *) {
     QColor neonPink(255, 105, 180); // RGB values for neon pink
     painter->setBrush(neonPink);
@@ -22,6 +43,10 @@ void UserRobot::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidg
     painter->drawLine(0, 0, size / 2 * cos(angle), size / 2 * sin(angle));
 }
 
+/**
+ * @brief Handles key press events for the robot's movement and rotation.
+ * @param event The key event.
+ */
 void UserRobot::keyPressEvent(QKeyEvent *event) {
     switch (event->key()) {
     case Qt::Key_W:
@@ -46,12 +71,20 @@ void UserRobot::keyPressEvent(QKeyEvent *event) {
     }
 }
 
+/**
+ * @brief Handles key release events for stopping rotation.
+ * @param event The key event.
+ */
 void UserRobot::keyReleaseEvent(QKeyEvent *event) {
     if ((event->key() == Qt::Key_A || event->key() == Qt::Key_D) && rotating != None) {
         rotating = None;
     }
 }
 
+/**
+ * @brief Advances the robot's movement and rotation.
+ * @param step Not used.
+ */
 void UserRobot::advance(int step) {
     if (!step)
         return;
@@ -77,8 +110,6 @@ void UserRobot::advance(int step) {
                     QPointF obstaclePos = item->pos(); // Obtain obstacle position
                     qreal obstacleSize = 40; // Size of the obstacle, adjust as needed
                     QRectF obstacleBoundingRect = QRectF(obstaclePos.x() - obstacleSize / 2, obstaclePos.y() - obstacleSize / 2, obstacleSize, obstacleSize);
-                    qDebug() << "Robot: " << robotBoundingRect;
-                    qDebug() << "Obs: " << obstacleBoundingRect;
                     if (robotBoundingRect.intersects(obstacleBoundingRect)) {
                         obstacleCollision = true;
                         break;
@@ -98,6 +129,10 @@ void UserRobot::advance(int step) {
         update();
     }
 }
+
+/**
+ * @brief Updates the robot's movement.
+ */
 void UserRobot::updateMovement() {
     if (moving) {
         qreal dx = speed * cos(angle);

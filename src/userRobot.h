@@ -1,3 +1,10 @@
+/*!
+ * @file userRobot.h
+ * @author Josef Susík (xsusik00)
+ * @author Vladyslav Tverdokhlib (xtverd01)
+ * @brief User robot header
+ */
+
 #ifndef USERROBOT_H
 #define USERROBOT_H
 

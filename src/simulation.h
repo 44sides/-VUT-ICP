@@ -1,3 +1,10 @@
+/*!
+ * @file simulation.h
+ * @author Josef Susík (xsusik00)
+ * @author Vladyslav Tverdokhlib (xtverd01)
+ * @brief Simulation header
+ */
+
 #ifndef SIMULATION_H
 #define SIMULATION_H
 

@@ -1,0 +1,40 @@
+{
+  "obstacles": [
+      {
+          "rotation": 0,
+          "size": 20,
+          "x": 100,
+          "y": 100
+      },
+      {
+          "rotation": 0,
+          "size": 20,
+          "x": 100,
+          "y": 340
+      },
+      {
+          "rotation": 0,
+          "size": 20,
+          "x": 300,
+          "y": 220
+      }
+  ],
+  "robots": [
+      {
+          "angle": 270,
+          "color": "#008000",
+          "detectionDistance": 0,
+          "rotationDirection": "Right",
+          "speed": 2,
+          "turnAngle": 120,
+          "x": 100,
+          "y": 200
+      }
+  ],
+  "scene": {
+      "height": 600,
+      "width": 600
+  },
+  "userRobot": [
+  ]
+}

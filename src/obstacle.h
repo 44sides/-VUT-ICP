@@ -1,3 +1,11 @@
+/*!
+ * @file obstacle.h
+ * @author Josef Susík (xsusik00)
+ * @author Vladyslav Tverdokhlib (xtverd01)
+ * @brief Obstacle header
+ */
+
+
 #ifndef OBSTACLE_H
 #define OBSTACLE_H
 

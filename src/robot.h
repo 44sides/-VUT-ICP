@@ -1,3 +1,11 @@
+/*!
+ * @file robot.h
+ * @author Josef Susík (xsusik00)
+ * @author Vladyslav Tverdokhlib (xtverd01)
+ * @brief Autonomous robot header
+ */
+
+
 #ifndef ROBOT_H
 #define ROBOT_H
 
