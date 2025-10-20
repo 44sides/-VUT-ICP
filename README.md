@@ -1,6 +1,10 @@
 # -VUT-ICP
 The C++ Programming Language - 2D robot simulator
 
+<p align="center">
+  <img width="920" height="848" alt="preview" src="https://github.com/user-attachments/assets/d60b7fb4-c26f-4d72-b787-cae1c537ba42" />
+</p>
+
 After launch, the program prompts the user to load a JSON file. Once a valid JSON file is selected, the simulation is loaded in a paused state.
 The user can add robots or obstacles and then start the simulation.
 Autonomous robots have a fixed size, while the robot controlled by the user can have its size changed. The user-controlled robot is always pink. The color of autonomous robots can be changed.
